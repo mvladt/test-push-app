@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Push App</title>
+  </head>
+
+  <script>
+    function urlBase64ToUint8Array(base64String) {
+      var padding = "=".repeat((4 - (base64String.length % 4)) % 4);
+      var base64 = (base64String + padding).replace(/\-/g, "+").replace(/_/g, "/");
+
+      var rawData = window.atob(base64);
+      var outputArray = new Uint8Array(rawData.length);
+
+      for (var i = 0; i < rawData.length; ++i) {
+        outputArray[i] = rawData.charCodeAt(i);
+      }
+      return outputArray;
+    }
+  </script>
+  
+  <script>
+    function askPermission() {
+      return new Promise(function (resolve, reject) {
+        const permissionResult = Notification.requestPermission(function (result) {
+          resolve(result);
+        });
+
+        if (permissionResult) {
+          permissionResult.then(resolve, reject);
+        }
+      }).then(function (permissionResult) {
+        if (permissionResult !== "granted") {
+          throw new Error("We weren't granted permission.");
+        }
+      });
+    }
+
+    function subscribeUserToPush() {
+      return navigator.serviceWorker
+        .register("/service-worker.js")
+        .then(function (registration) {
+          const subscribeOptions = {
+            userVisibleOnly: true,
+            applicationServerKey: urlBase64ToUint8Array(
+              "BKs3lq5pgvyYXwTEYc3v4idfkRrK8ZiFymjIwjpC7TEiCRLHkezeq7E2SMHTWWEItl1e-vPCZ-pHvNvjggsF7cc"
+            ),
+          };
+
+          return registration.pushManager.subscribe(subscribeOptions);
+        })
+        .then(function (pushSubscription) {
+          console.log("Received PushSubscription: ", JSON.stringify(pushSubscription));
+          return pushSubscription;
+        });
+    }
+
+    askPermission();
+    const pushSubscription = subscribeUserToPush();
+  </script>
+
+  <body>
+    <button class="button">SEND</button>
+
+    <script>
+      document.querySelector(".button").addEventListener("click", async function () {});
+    </script>
+  </body>
+
+  <style>
+    .button {
+      display: block;
+      margin: auto;
+      margin-top: 40vh;
+      padding: 15px;
+    }
+  </style>
+</html>
