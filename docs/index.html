@@ -41,19 +41,19 @@
 
     function subscribeUserToPush() {
       return navigator.serviceWorker
-        .register("service-worker.js")
+        .register("/service-worker.js")
         .then(function (registration) {
           const subscribeOptions = {
             userVisibleOnly: true,
             applicationServerKey: urlBase64ToUint8Array(
-              "BKs3lq5pgvyYXwTEYc3v4idfkRrK8ZiFymjIwjpC7TEiCRLHkezeq7E2SMHTWWEItl1e-vPCZ-pHvNvjggsF7cc"
+              "BDhNEtCSeFof4y-TZ4b5-YnQrDjiifbuF0tMOJfVcmPdRkoqHrx8Xh6_kQrmtg8136Z9I_sMzS7ttug49bXgxZE"
             ),
           };
 
-          return registration.pushManager.getSubscription();
+          return registration.pushManager.subscribe(subscribeOptions);
         })
         .then(function (pushSubscription) {
-          console.log("Unsub: ", JSON.stringify(pushSubscription.unsubscribe()));
+          console.log("Received PushSubscription: ", JSON.stringify(pushSubscription));
           return pushSubscription;
         });
     }
