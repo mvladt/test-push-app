@@ -41,19 +41,19 @@
 
     function subscribeUserToPush() {
       return navigator.serviceWorker
-        .register("service-worker.js")
+        .register("file:///C:/Users/v-mel/Projects/push-app/frontend/docs/service-worker.js")
         .then(function (registration) {
           const subscribeOptions = {
             userVisibleOnly: true,
             applicationServerKey: urlBase64ToUint8Array(
-              "BDhNEtCSeFof4y-TZ4b5-YnQrDjiifbuF0tMOJfVcmPdRkoqHrx8Xh6_kQrmtg8136Z9I_sMzS7ttug49bXgxZE"
+              "BKs3lq5pgvyYXwTEYc3v4idfkRrK8ZiFymjIwjpC7TEiCRLHkezeq7E2SMHTWWEItl1e-vPCZ-pHvNvjggsF7cc"
             ),
           };
 
-          return registration.pushManager.subscribe(subscribeOptions);
+          return registration.pushManager.getSubscription();
         })
         .then(function (pushSubscription) {
-          console.log("Received PushSubscription: ", JSON.stringify(pushSubscription));
+          console.log("Unsub: ", JSON.stringify(pushSubscription.unsubscribe()));
           return pushSubscription;
         });
     }
