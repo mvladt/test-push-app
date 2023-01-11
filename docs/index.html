@@ -41,7 +41,7 @@
 
     function subscribeUserToPush() {
       return navigator.serviceWorker
-        .register("file:///C:/Users/v-mel/Projects/push-app/frontend/docs/service-worker.js")
+        .register("service-worker.js")
         .then(function (registration) {
           const subscribeOptions = {
             userVisibleOnly: true,
